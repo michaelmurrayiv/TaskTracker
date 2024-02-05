@@ -28,11 +28,88 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.app-content {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
 }
+
+/* Navbar */
+.navbar {
+  background-color: #333;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item {
+  margin-left: 20px;
+}
+
+.navbar-links {
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+}
+
+.navbar-links:hover {
+  background-color: #555;
+  border-radius: 5px;
+}
+ /* Tasks */
+
+ .task-container {
+  background-color: #555;
+  border-radius: 10px;
+  padding: 5px;
+ }
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 0;
+  color: white;
+}
+ .tasks {
+  border: 2px solid black;
+  margin-bottom: 3px;
+  padding: 10px;
+ }
+
+ /* Calendar */
+
+ .calendar {
+  width: 66.66%;
+  background-color: #333;
+  border: 2px solid black;
+  padding: 10px;
+  color: white;
+ }
+ .test {
+    width: 33.33%;
+ }
