@@ -112,4 +112,5 @@
  }
  .test {
     width: 33.33%;
+    flex-direction: column;
  }

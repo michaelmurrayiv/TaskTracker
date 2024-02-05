@@ -6,9 +6,10 @@ const sampleTasks = [
   "apply for job"
 ]
 
-function Tasks() {
+function Tasks(props) {
   return (
     <div className="task-container">
+      {props.title}
       <ul className="task-list">
         {sampleTasks.map((task, index) => (
           <li className="tasks" key={index}>{task}</li>
