@@ -31,13 +31,13 @@
 .app-content {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  height: 90vh;
 }
 
 /* Navbar */
 .navbar {
   background-color: #333;
-  height: 60px;
+  height: 10vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -85,6 +85,7 @@
   background-color: #555;
   border-radius: 10px;
   padding: 5px;
+  height: 45vh;
  }
 
 .task-list {
