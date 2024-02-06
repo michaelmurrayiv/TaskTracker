@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from './components/Navbar'
-import Tasks from './components/Tasks'
+import { Tasks, CompletedTasks } from './components/Tasks'
 
 function App() {
   return (
@@ -8,8 +8,8 @@ function App() {
       <Navbar />
       <div className="app-content">
         <div className="test">
-          <Tasks title="Tasks"/>
-          <Tasks title="Completed"/>
+          <Tasks/>
+          <CompletedTasks/>
         </div>
         <div className="calendar">Calendar</div>
       </div>

@@ -1,7 +1,13 @@
-const sampleTasks = [
+const Tasks = [
   "finish website", 
   "work out", 
   "apply for job"
 ];
 
-module.exports = sampleTasks;
+const CompletedTasks = [
+  "jumping jacks", 
+  "go for run", 
+  "grocery shopping"
+];
+
+module.exports = { Tasks, CompletedTasks };
