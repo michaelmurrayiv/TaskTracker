@@ -130,3 +130,21 @@
     width: 33.33%;
     flex-direction: column;
  }
+
+ /* buttons */
+
+ .add-task {
+   color: var(--text-color);
+   background-color: rgba(0,0,0,0);
+   border: none;
+   font-weight: bold;
+   font-size: 20px;
+   margin-left: 75%;
+   border-radius: 50%;
+ }
+ .add-task:hover {
+  background-color: #d1d1d1;
+ }
+ .add-task:active {
+  color: rgba(139, 100, 221, 1);
+ }
