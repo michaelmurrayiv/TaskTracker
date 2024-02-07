@@ -115,6 +115,12 @@
   border: 1px solid rgba(29, 49, 233, 0.6);
  }
 
+ .task-header {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+ }
  /* Calendar */
 
  .calendar {

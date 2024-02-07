@@ -33,21 +33,19 @@ function Tasks(props) {
     console.error('Data is not an array', data);
   }})
       .catch((error) => console.error("Error fetching data", error));
-  }, []);
+  }, [props.task_status]);
 
   return (
     <div className="task-container">
       {props.task_status === "open" ? (
-        <>
+        <div className="task-header">
           Tasks
           <button className="add-task" onClick={handleOpen}>
             +
           </button>
-        </>
+        </div>
       ) : (
-        <>
-          Completed
-        </>
+        <div className="task-header">Completed</div>
       )}
       <Modal
         open={open}
