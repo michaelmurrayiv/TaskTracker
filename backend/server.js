@@ -34,7 +34,10 @@ async function run() {
     // set up endpoints
     app.get("/tasks/open", async (req, res) => {
       try {
-        const tasks = await db.collection("tasks").find({"completed": false}).toArray();
+        const tasks = await db
+        .collection("tasks")
+        .find({"completed": false})
+        .toArray();
         res.status(200).json(tasks);
       } catch (error) {
         res.status(500).json({ message: "Error fetching tasks", error });
@@ -45,7 +48,7 @@ async function run() {
       try {
         const tasks = await db
           .collection("tasks")
-          .find({ completed: false })
+          .find({ completed: true })
           .toArray();
         res.status(200).json(tasks);
       } catch (error) {
