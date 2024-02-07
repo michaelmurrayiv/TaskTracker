@@ -4,7 +4,9 @@ const app = express();
 const PORT = process.env.PORT || 9999;
 const data = require('./dummy_data');
 
-require('dotenv').config();
+require('dotenv').config();    
+app.use(cors());
+app.use(express.json());
 
 // connect to database
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -30,21 +32,28 @@ async function run() {
     db = client.db("TaskTrackerDB");
 
     // set up endpoints
-    app.get("/tasks", async (req, res) => {
+    app.get("/tasks/open", async (req, res) => {
       try {
-        const tasks = await db.collection("tasks").find().toArray();
-        console.log(tasks);
+        const tasks = await db.collection("tasks").find({"completed": false}).toArray();
         res.status(200).json(tasks);
       } catch (error) {
         res.status(500).json({ message: "Error fetching tasks", error });
       }
     });
 
-    
-    // start backend
-    app.use(cors());
-    app.use(express.json());
+    app.get("/tasks/closed", async (req, res) => {
+      try {
+        const tasks = await db
+          .collection("tasks")
+          .find({ completed: false })
+          .toArray();
+        res.status(200).json(tasks);
+      } catch (error) {
+        res.status(500).json({ message: "Error fetching tasks", error });
+      }
+    });
 
+    // start backend
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
@@ -59,10 +68,5 @@ run().catch(console.dir);
 
 
 // endpoint configurations
-
-
-app.get("/completed", (req, res) => {
-  res.json(data.CompletedTasks);
-});
 
 

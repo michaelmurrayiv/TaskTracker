@@ -23,10 +23,12 @@ function Tasks() {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    fetch("http://localhost:9999/tasks")
+    console.log("here");
+    fetch("http://localhost:9999/tasks/open")
       .then((response) => response.json())
       .then((data) => {
   if (Array.isArray(data)) {
+    console.log(data);
     setTasks(data);
   } else {
     console.error('Data is not an array', data);
@@ -37,7 +39,9 @@ function Tasks() {
   return (
     <div className="task-container">
       Tasks
-      <button className="add-task" onClick={handleOpen}>+</button>
+      <button className="add-task" onClick={handleOpen}>
+        +
+      </button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -55,8 +59,9 @@ function Tasks() {
       </Modal>
       <ul className="task-list">
         {tasks.map((task, index) => (
-          <li className="tasks" key={index}>
-            {task}
+          <li className="tasks" key={task._id}>
+            {task.description} - Due: {task.dueDate || "No due date"} -
+            Completed: {task.completed ? "Yes" : "No"}
           </li>
         ))}
       </ul>
@@ -68,7 +73,7 @@ function CompletedTasks() {
   const [completedTasks, setCompletedTasks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:9999/completed")
+    fetch("http://localhost:9999/tasks/closed")
       .then((response) => response.json())
       .then((data) => setCompletedTasks(data))
       .catch((error) => console.error("Error fetching data", error));
