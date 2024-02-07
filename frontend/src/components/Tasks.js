@@ -25,7 +25,12 @@ function Tasks() {
   useEffect(() => {
     fetch("http://localhost:9999/tasks")
       .then((response) => response.json())
-      .then((data) => setTasks(data))
+      .then((data) => {
+  if (Array.isArray(data)) {
+    setTasks(data);
+  } else {
+    console.error('Data is not an array', data);
+  }})
       .catch((error) => console.error("Error fetching data", error));
   }, []);
 
