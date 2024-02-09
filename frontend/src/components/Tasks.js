@@ -65,6 +65,7 @@ function Tasks(props) {
       <ul className="task-list">
         {tasks.map((task, index) => (
           <li className="tasks" key={task._id}>
+            <button className="mark-as-complete">x</button>
             {task.description} - Due: {task.dueDate || "No due date"}
           </li>
         ))}
