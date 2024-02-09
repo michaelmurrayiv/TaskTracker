@@ -34,7 +34,7 @@ function Tasks(props) {
         }
       })
       .catch((error) => console.error("Error fetching data", error));
-  }, [props.task_status]);
+  }, [props.task_status, tasks]);
 
   const markComplete = (taskId) => {
     fetch(`http://localhost:9999/tasks/${taskId}/mark`, {
