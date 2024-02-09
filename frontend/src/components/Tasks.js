@@ -21,19 +21,44 @@ function Tasks(props) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   useEffect(() => {
-    console.log("here");
     fetch(`http://localhost:9999/tasks/${props.task_status}`)
       .then((response) => response.json())
       .then((data) => {
-  if (Array.isArray(data)) {
-    console.log(data);
-    setTasks(data);
-  } else {
-    console.error('Data is not an array', data);
-  }})
+        if (Array.isArray(data)) {
+          console.log(data);
+          setTasks(data);
+        } else {
+          console.error("Data is not an array", data);
+        }
+      })
       .catch((error) => console.error("Error fetching data", error));
   }, [props.task_status]);
+
+  const markComplete = (taskId) => {
+    fetch(`http://localhost:9999/tasks/${taskId}/mark`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then(data => {
+        setTasks(prevTasks => prevTasks.map(task => {
+        if (task._id === taskId) {
+          return { ...task, completed: data.completed };
+        }
+        return task;
+      }));
+    })
+      .catch((error) => console.error("Error updating task", error));
+  };
 
   return (
     <div className="task-container">
@@ -63,9 +88,14 @@ function Tasks(props) {
         </Box>
       </Modal>
       <ul className="task-list">
-        {tasks.map((task, index) => (
+        {tasks.map((task) => (
           <li className="tasks" key={task._id}>
-            <button className="mark-as-complete">x</button>
+            <button
+              className="mark-as-complete"
+              onClick={() => markComplete(task._id)}
+            >
+              x
+            </button>
             {task.description} - Due: {task.dueDate || "No due date"}
           </li>
         ))}
@@ -73,6 +103,5 @@ function Tasks(props) {
     </div>
   );
 }
-
 
 export default Tasks;

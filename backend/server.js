@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // connect to database
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri =
   `mongodb+srv://michael-murray-iv:${process.env.DB_PASSWORD}@taskmanagercluster.3uryttn.mongodb.net/?retryWrites=true&w=majority`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -31,6 +31,8 @@ async function run() {
     db = client.db("TaskTrackerDB");
 
     // set up endpoints
+
+    // get all uncompleted tasks
     app.get("/tasks/open", async (req, res) => {
       try {
         const tasks = await db
@@ -43,6 +45,7 @@ async function run() {
       }
     });
 
+    // get all completed tasks
     app.get("/tasks/closed", async (req, res) => {
       try {
         const tasks = await db
@@ -54,6 +57,44 @@ async function run() {
         res.status(500).json({ message: "Error fetching tasks", error });
       }
     });
+
+    // mark task as completed/not completed
+app.put("/tasks/:taskId/mark", async (req, res) => {
+  try {
+    const taskId = req.params.taskId;
+    const task = await db
+      .collection("tasks")
+      .findOne({ _id: new ObjectId(taskId) });
+
+    if (!task) {
+      res.status(404).json({ message: "Task not found" });
+      return; 
+    }
+
+    const newStatus = !task.completed;
+
+    const result = await db
+      .collection("tasks")
+      .updateOne(
+        { _id: new ObjectId(taskId) },
+        { $set: { completed: newStatus} }
+      );
+
+    if (result.modifiedCount === 0) {
+      res.status(404).json({ message: "Task not found" });
+    } else {
+res
+  .status(200)
+  .json({
+    message: "Task updated successfully",
+    completed: newStatus,
+  });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error updating task", error });
+  }
+});
+
 
     // start backend
     app.listen(PORT, () => {
