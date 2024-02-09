@@ -92,6 +92,40 @@ async function run() {
 			}
 		});
 
+app.post("/tasks", async (req, res) => {
+	try {
+		const { description, dueDate } = req.body;
+		let newTask = {
+			description,
+			completed: false,
+		};
+
+		if (dueDate) {
+			newTask.dueDate = dueDate;
+		}
+
+		const result = await db.collection("tasks").insertOne(newTask);
+
+		console.log(newTask); 
+
+		if (result.acknowledged) {
+			res.status(201).json({
+				message: "Task created successfully",
+				task: {
+					_id: result.insertedId,
+					...newTask,
+				},
+			});
+		} else {
+			res.status(400).json({ message: "Task creation failed" });
+		}
+	} catch (error) {
+		console.error("Error creating task:", error);
+		res.status(500).json({ message: "Error creating task", error });
+	}
+});
+
+
 		// start backend
 		app.listen(PORT, () => {
 			console.log(`Server is running on port ${PORT}`);

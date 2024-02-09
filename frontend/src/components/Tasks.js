@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import TaskModal from "./TaskModal.js";
 
 const style = {
 	position: "absolute",
@@ -27,7 +25,6 @@ function Tasks(props) {
 			.then((response) => response.json())
 			.then((data) => {
 				if (Array.isArray(data)) {
-					console.log(data);
 					setTasks(data);
 				} else {
 					console.error("Data is not an array", data);
@@ -74,21 +71,7 @@ function Tasks(props) {
 			) : (
 				<div className="task-header">Completed</div>
 			)}
-			<Modal
-				open={open}
-				onClose={handleClose}
-				aria-labelledby="new task"
-				aria-describedby="modal-modal-description"
-			>
-				<Box sx={style}>
-					<Typography id="modal-modal-title" variant="h6" component="h2">
-						Create Task
-					</Typography>
-					<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-						Create task form here
-					</Typography>
-				</Box>
-			</Modal>
+			<TaskModal open={open} handleClose={handleClose}></TaskModal>
 			<ul className="task-list">
 				{tasks.map((task) => (
 					<li className="tasks" key={task._id}>
