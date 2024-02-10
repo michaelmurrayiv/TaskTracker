@@ -3,6 +3,9 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 9999;
 
+const authenticateToken = require('./auth');
+
+
 require("dotenv").config();
 app.use(cors());
 app.use(express.json());
@@ -126,7 +129,7 @@ async function run() {
 		});
 
     // register with a new username and password
-		router.post("/register", async (req, res) => {
+		app.post("/register", async (req, res) => {
 			try {
 				const hashedPassword = await bcrypt.hash(req.body.password, 10);
 				const user = new User({
@@ -141,7 +144,7 @@ async function run() {
 		});
 
 // Authenticate user and log in
-		router.post("/login", async (req, res) => {
+		app.post("/login", async (req, res) => {
 			const user = await User.findOne({ username: req.body.username });
 			if (user && (await bcrypt.compare(req.body.password, user.password))) {
 				const token = jwt.sign(
