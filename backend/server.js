@@ -35,7 +35,7 @@ async function run() {
 		// set up endpoints
 
 		// get all uncompleted tasks
-		app.get("/tasks/open", async (req, res) => {
+		app.get("/tasks/open", authenticateToken, async (req, res) => {
 			try {
 				const tasks = await db
 					.collection("tasks")
@@ -48,7 +48,7 @@ async function run() {
 		});
 
 		// get all completed tasks
-		app.get("/tasks/closed", async (req, res) => {
+		app.get("/tasks/closed", authenticateToken, async (req, res) => {
 			try {
 				const tasks = await db
 					.collection("tasks")
