@@ -92,39 +92,67 @@ async function run() {
 			}
 		});
 
-app.post("/tasks", async (req, res) => {
-	try {
-		const { description, dueDate } = req.body;
-		let newTask = {
-			description,
-			completed: false,
-		};
+		app.post("/tasks", async (req, res) => {
+			try {
+				const { description, dueDate } = req.body;
+				let newTask = {
+					description,
+					completed: false,
+				};
 
-		if (dueDate) {
-			newTask.dueDate = dueDate;
-		}
+				if (dueDate) {
+					newTask.dueDate = dueDate;
+				}
 
-		const result = await db.collection("tasks").insertOne(newTask);
+				const result = await db.collection("tasks").insertOne(newTask);
 
-		console.log(newTask); 
+				console.log(newTask);
 
-		if (result.acknowledged) {
-			res.status(201).json({
-				message: "Task created successfully",
-				task: {
-					_id: result.insertedId,
-					...newTask,
-				},
-			});
-		} else {
-			res.status(400).json({ message: "Task creation failed" });
-		}
-	} catch (error) {
-		console.error("Error creating task:", error);
-		res.status(500).json({ message: "Error creating task", error });
-	}
-});
+				if (result.acknowledged) {
+					res.status(201).json({
+						message: "Task created successfully",
+						task: {
+							_id: result.insertedId,
+							...newTask,
+						},
+					});
+				} else {
+					res.status(400).json({ message: "Task creation failed" });
+				}
+			} catch (error) {
+				console.error("Error creating task:", error);
+				res.status(500).json({ message: "Error creating task", error });
+			}
+		});
 
+    // register with a new username and password
+		router.post("/register", async (req, res) => {
+			try {
+				const hashedPassword = await bcrypt.hash(req.body.password, 10);
+				const user = new User({
+					username: req.body.username,
+					password: hashedPassword,
+				});
+				await user.save();
+				res.status(201).send("User created");
+			} catch (error) {
+				res.status(500).send(error.message);
+			}
+		});
+
+// Authenticate user and log in
+		router.post("/login", async (req, res) => {
+			const user = await User.findOne({ username: req.body.username });
+			if (user && (await bcrypt.compare(req.body.password, user.password))) {
+				const token = jwt.sign(
+					{ userId: user._id },
+					process.env.ACCESS_TOKEN_SECRET
+				);
+				res.json({ token });
+			} else {
+				res.status(401).send("Invalid credentials");
+			}
+		});
 
 		// start backend
 		app.listen(PORT, () => {
