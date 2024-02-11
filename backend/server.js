@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const authenticateToken = require('./auth');
 const mongoose = require("mongoose");
 const User = require("./user");
-
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 app.use(cors());
 app.use(express.json());
@@ -168,18 +168,29 @@ async function run() {
 		});
 
 // Authenticate user and log in
-		app.post("/login", async (req, res) => {
-			const user = await User.findOne({ username: req.body.username });
-			if (user && (await bcrypt.compare(req.body.password, user.password))) {
-				const token = jwt.sign(
-					{ userId: user._id },
-					process.env.ACCESS_TOKEN_SECRET
-				);
-				res.json({ token });
-			} else {
-				res.status(401).send("Invalid credentials");
-			}
-		});
+app.post("/login", async (req, res) => {
+	try {
+		const user = await User.findOne({ username: req.body.username });
+		if (user && (await bcrypt.compare(req.body.password, user.password))) {
+			const tokenPayload = {
+				userId: user._id,
+				username: user.username,
+			};
+			const token = jwt.sign(
+				tokenPayload,
+				process.env.ACCESS_TOKEN_SECRET,
+				{ expiresIn: "2h" } 
+			);
+			res.json({ token });
+		} else {
+			res.status(401).json({ message: "Invalid credentials" });
+		}
+	} catch (error) {
+		console.error("Error during login:", error);
+		res.status(500).json({ message: "An error occurred during login" });
+	}
+});
+
 
 		// start backend
 		app.listen(PORT, () => {
