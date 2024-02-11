@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TaskModal from "./TaskModal.js";
 
+const token = localStorage.getItem("token");
+
 const style = {
 	position: "absolute",
 	top: "50%",
@@ -21,7 +23,12 @@ function Tasks(props) {
 	const handleClose = () => setOpen(false);
 
 	useEffect(() => {
-		fetch(`http://localhost:9999/tasks/${props.task_status}`)
+		fetch(`http://localhost:9999/tasks/${props.task_status}`, {
+			headers: {
+				"Content-Type": "application/json",
+				authorization: `Bearer ${token}`
+			},
+		})
 			.then((response) => response.json())
 			.then((data) => {
 				if (Array.isArray(data)) {
@@ -38,6 +45,7 @@ function Tasks(props) {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
+				"authorization": `Bearer ${token}`,
 			},
 		})
 			.then((response) => {

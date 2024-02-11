@@ -51,7 +51,7 @@ async function run() {
 			try {
 				const tasks = await db
 					.collection("tasks")
-					.find({ completed: false })
+					.find({ completed: false, userId: req.user.userId })
 					.toArray();
 				res.status(200).json(tasks);
 			} catch (error) {
@@ -64,7 +64,7 @@ async function run() {
 			try {
 				const tasks = await db
 					.collection("tasks")
-					.find({ completed: true })
+					.find({ completed: true, userId: req.user.userId })
 					.toArray();
 				res.status(200).json(tasks);
 			} catch (error) {
@@ -183,6 +183,7 @@ app.post("/login", async (req, res) => {
 			const token = jwt.sign(
 				tokenPayload,
 				process.env.ACCESS_TOKEN_SECRET,
+				{ expiresIn: '2h' }
 			);
 			res.json({ token });
 		} else {
