@@ -11,7 +11,6 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-
 // connect to database
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://michael-murray-iv:${process.env.DB_PASSWORD}@taskmanagercluster.3uryttn.mongodb.net/?retryWrites=true&w=majority`;
@@ -33,6 +32,7 @@ mongoose
 	})
 	.then(() => console.log("MongoDB connected"))
 	.catch((err) => console.log(err));
+
 async function run() {
 	try {
 		// Connect the client to the server
@@ -73,7 +73,7 @@ async function run() {
 		});
 
 		// mark task as completed/not completed
-		app.put("/tasks/:taskId/mark", async (req, res) => {
+		app.put("/tasks/:taskId/mark", authenticateToken, async (req, res) => {
 			try {
 				const taskId = req.params.taskId;
 				const task = await db
@@ -107,12 +107,15 @@ async function run() {
 			}
 		});
 
-		app.post("/tasks", async (req, res) => {
+		app.post("/tasks", authenticateToken, async (req, res) => {
 			try {
 				const { description, dueDate } = req.body;
+				const userId = req.user.userId;
+
 				let newTask = {
 					description,
 					completed: false,
+					userId: userId,
 				};
 
 				if (dueDate) {
@@ -120,8 +123,6 @@ async function run() {
 				}
 
 				const result = await db.collection("tasks").insertOne(newTask);
-
-				console.log(newTask);
 
 				if (result.acknowledged) {
 					res.status(201).json({
@@ -140,6 +141,7 @@ async function run() {
 			}
 		});
 
+
     // register with a new username and password
 		app.post("/register", async (req, res) => {
 			try {
@@ -151,13 +153,15 @@ async function run() {
 						.json({ message: "Username and password are required" });
 				}
 				const hashedPassword = await bcrypt.hash(password, 10);
+				const count = await User.countDocuments();
 				const newUser = await User.create({
 					username,
 					password: hashedPassword,
+					userId: count,
 				});
-
+				console.log
 				res.status(201).json(
-					{ userId: newUser._id, username: newUser.username });
+					{ userId: newUser.userId, username: newUser.username });
 			} catch (error) {
 				if (error.code === 11000) {
 					return res.status(409).json({ message: "Username already exists" });
@@ -173,13 +177,12 @@ app.post("/login", async (req, res) => {
 		const user = await User.findOne({ username: req.body.username });
 		if (user && (await bcrypt.compare(req.body.password, user.password))) {
 			const tokenPayload = {
-				userId: user._id,
+				userId: user.userId,
 				username: user.username,
 			};
 			const token = jwt.sign(
 				tokenPayload,
 				process.env.ACCESS_TOKEN_SECRET,
-				{ expiresIn: "2h" } 
 			);
 			res.json({ token });
 		} else {

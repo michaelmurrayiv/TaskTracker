@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 
+const token = localStorage.getItem('token');
+
 function TaskModal({ open, handleClose }) {
 	const [description, setDescription] = useState("");
 	const [dueDate, setDueDate] = useState("");
 
 	const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await fetch('http://localhost:9999/tasks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+										'authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     description,
