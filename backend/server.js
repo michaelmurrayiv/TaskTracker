@@ -2,13 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 9999;
-
+const bcrypt = require("bcrypt");
 const authenticateToken = require('./auth');
-
+const mongoose = require("mongoose");
+const User = require("./user");
 
 require("dotenv").config();
 app.use(cors());
 app.use(express.json());
+
 
 // connect to database
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -21,6 +23,16 @@ const client = new MongoClient(uri, {
 		deprecationErrors: true,
 	},
 });
+//connect to db using mongoose
+const uri2 = `mongodb+srv://michael-murray-iv:${process.env.DB_PASSWORD}@taskmanagercluster.3uryttn.mongodb.net/TaskTrackerDB?retryWrites=true&w=majority`;
+
+mongoose
+	.connect(uri2, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	})
+	.then(() => console.log("MongoDB connected"))
+	.catch((err) => console.log(err));
 async function run() {
 	try {
 		// Connect the client to the server
@@ -131,15 +143,27 @@ async function run() {
     // register with a new username and password
 		app.post("/register", async (req, res) => {
 			try {
-				const hashedPassword = await bcrypt.hash(req.body.password, 10);
-				const user = new User({
-					username: req.body.username,
+				// Validation logic here (as needed)
+				const { username, password } = req.body;
+				if (!username || !password) {
+					return res
+						.status(400)
+						.json({ message: "Username and password are required" });
+				}
+				const hashedPassword = await bcrypt.hash(password, 10);
+				const newUser = await User.create({
+					username,
 					password: hashedPassword,
 				});
-				await user.save();
-				res.status(201).send("User created");
+
+				res.status(201).json(
+					{ userId: newUser._id, username: newUser.username });
 			} catch (error) {
-				res.status(500).send(error.message);
+				if (error.code === 11000) {
+					return res.status(409).json({ message: "Username already exists" });
+				}
+				console.error("Error registering new user:", error);
+				res.status(500).json({ message: "Failed to register user" });
 			}
 		});
 

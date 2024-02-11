@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import LoginModal from "./LoginModal.js";
 
 function Navbar() {
+    const [open, setOpen] = useState(false);
+		const handleOpen = () => setOpen(true);
+		const handleClose = () => setOpen(false);
+		const handleLogout = () => {
+			console.log("User logged out");
+			handleClose(); 
+		};
 	return (
 		<nav className="navbar">
 			<div className="navbar-container">
@@ -13,13 +21,13 @@ function Navbar() {
 							Profile
 						</a>
 					</li>
-					<li className="navbar-item">
-						<a href="/about" className="navbar-links">
-							Log out
-						</a>
-					</li>
+					<li className="navbar-item"></li>
+					  <button onClick={handleOpen} className="navbar-links">
+						  Sign In
+					  </button>
 				</ul>
 			</div>
+			<LoginModal open={open} handleClose={handleClose} />
 		</nav>
 	);
 }
