@@ -117,6 +117,8 @@
 	color: rgba(29, 49, 233, 0.6);
 	border-radius: var(--border-radius);
 	border: 1px solid rgba(29, 49, 233, 0.6);
+	display: flex;
+	justify-content: space-between;
 }
 
 .task-header {
@@ -149,13 +151,12 @@
 	border: none;
 	font-weight: bold;
 	font-size: 20px;
-	margin-left: 75%;
 	border-radius: 50%;
 }
 .add-task:hover {
 	background-color: #d1d1d1;
 }
-.add-task:active {
+.add-task:active , .add-to-calendar:active {
 	color: rgba(139, 100, 221, 1);
 }
 
@@ -170,4 +171,13 @@
 }
 .mark-as-complete:active {
 	color: rgba(139, 100, 221, 1);
+}
+
+.add-to-calendar {
+	color: rgba(29,49,233,.6);
+	background-color: rgba(0, 0, 0, 0);
+	border: none;
+	font-weight: lighter;
+	font-size: 10px;
+	border-radius: 50%;
 }

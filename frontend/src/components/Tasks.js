@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TaskModal from "./TaskModal.js";
+import moment from "moment";
 
 const token = localStorage.getItem("token");
 
@@ -67,6 +68,33 @@ function Tasks(props) {
 			.catch((error) => console.error("Error updating task", error));
 	};
 
+	const addToCalendar = (taskId) => {
+		fetch(`http://localhost:9999/tasks/${taskId}/date`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						authorization: `Bearer ${token}`, 
+					},
+					body: JSON.stringify({
+						newDueDate: moment().format("YYYY-MM-DD"),
+					}),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						setTasks((prevTasks) =>
+							prevTasks.map((task) => {
+								if (task._id === taskId) {
+									return { ...task, dueDate: data.newDueDate };
+								}
+								return task;
+							})
+						);
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+	};
+
 	return (
 		<div className="task-container">
 			{props.task_status === "open" ? (
@@ -83,13 +111,24 @@ function Tasks(props) {
 			<ul className="task-list">
 				{tasks.map((task) => (
 					<li className="tasks" key={task._id}>
-						<button
-							className="mark-as-complete"
-							onClick={() => markComplete(task._id)}
-						>
-							x
-						</button>
-						{task.description} - Due: {task.dueDate || "No due date"}
+						<div>
+							<button
+								className="mark-as-complete"
+								onClick={() => markComplete(task._id)}
+							>
+								x
+							</button>
+						</div>
+						<div>
+							{task.description} - Due: {task.dueDate || "No due date"}
+						</div>
+						<div>
+							<button
+								className="add-to-calendar"
+								onClick={() => addToCalendar(task._id)} >
+									Mark Today
+								</button>
+						</div>
 					</li>
 				))}
 			</ul>
