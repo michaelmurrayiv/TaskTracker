@@ -1,6 +1,7 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Tasks from "./components/Tasks";
+import TaskCalendar from "./components/TaskCalendar";
 
 function App() {
 	return (
@@ -11,7 +12,7 @@ function App() {
 					<Tasks task_status="open" />
 					<Tasks task_status="closed" />
 				</div>
-				<div className="calendar">Calendar</div>
+					<TaskCalendar />
 			</div>
 		</div>
 	);

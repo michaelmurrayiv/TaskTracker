@@ -134,6 +134,7 @@
 	color: var(--text-color);
 	margin: var(--margin-standard);
 	border-radius: var(--border-radius);
+	
 }
 
 .test {
