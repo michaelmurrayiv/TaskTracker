@@ -29,7 +29,39 @@ function TaskCalendar() {
 			setEvents(nextEvents);
 			console.log(updatedEvent);
 		};
-    
+
+  const CustomToolbar = (props) => {
+		const navigate = (action) => {
+			props.onNavigate(action);
+		};
+
+		const goToToday = () => {
+			const now = new Date();
+			props.date.setMonth(now.getMonth());
+			props.date.setYear(now.getFullYear());
+			props.onNavigate("TODAY", now);
+		};
+
+		const monthName = moment(props.date).format("MMMM YYYY");
+
+		return (
+			<div className="rbc-toolbar">
+				<span className="rbc-toolbar-label">{monthName}</span>
+				<span className="rbc-btn-group">
+					<button type="button" onClick={goToToday}>
+						Today
+					</button>
+					<button type="button" onClick={() => navigate("PREV")}>
+						Prev
+					</button>
+					<button type="button" onClick={() => navigate("NEXT")}>
+						Next
+					</button>
+				</span>
+			</div>
+		);
+	};
+
 	return (
 		<div className="calendar">
 			<DnDCalendar
@@ -39,6 +71,9 @@ function TaskCalendar() {
 				localizer={localizer}
 				onEventDrop={moveEvent}
 				resizable={false}
+				components={{
+					toolbar: CustomToolbar,
+				}}
 			/>
 		</div>
 	);

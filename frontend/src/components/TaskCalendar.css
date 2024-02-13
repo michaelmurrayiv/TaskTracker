@@ -11,6 +11,10 @@
   color: #333;
 }
 
+.rbc-toolbar-label {
+  
+}
+
 .rbc-toolbar button {
   color: #333; 
   background-color: transparent; 
@@ -46,7 +50,7 @@
 
 
 /* Today button styling */
-.rbc-toolbar .rbc-btn-group:first-child button {
+.rbc-toolbar .rbc-btn-group button {
   background-color: rgba(29, 49, 233, 0.6);
   color: white;
 }
