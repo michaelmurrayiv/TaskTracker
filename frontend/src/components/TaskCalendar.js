@@ -12,16 +12,24 @@ const DnDCalendar = withDragAndDrop(Calendar);
 function TaskCalendar() {
 	const [events, setEvents] = useState([
 		{
-			start: moment().toDate(),
-			end: moment().add(1, "days").toDate(),
+			start: moment().startOf('day').toDate(),
+			end: moment().endOf('day').toDate(),
 			title: "Some title",
+      allDay: true,
 		},
 	]);
 
-	const onEventDrop = (data) => {
-		console.log(data);
-	};
+	 const moveEvent = ({ event, start, end }) => {
+			const idx = events.indexOf(event);
 
+			const updatedEvent = { ...event, start, end, allDay: true };
+			const nextEvents = [...events];
+			nextEvents.splice(idx, 1, updatedEvent);
+
+			setEvents(nextEvents);
+			console.log(updatedEvent);
+		};
+    
 	return (
 		<div className="calendar">
 			<DnDCalendar
@@ -29,8 +37,8 @@ function TaskCalendar() {
 				defaultView="month"
 				events={events}
 				localizer={localizer}
-				onEventDrop={onEventDrop}
-				resizable
+				onEventDrop={moveEvent}
+				resizable={false}
 			/>
 		</div>
 	);
