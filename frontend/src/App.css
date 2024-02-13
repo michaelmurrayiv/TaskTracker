@@ -130,7 +130,6 @@
 .calendar {
 	width: 66.66%;
 	background-color: rgba(255, 255, 255, 0.5);
-	padding: 10px;
 	color: var(--text-color);
 	margin: var(--margin-standard);
 	border-radius: var(--border-radius);

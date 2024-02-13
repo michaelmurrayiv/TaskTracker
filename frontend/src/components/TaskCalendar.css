@@ -1,6 +1,6 @@
 .rbc-calendar {
   background: white; 
-  border: 1px solid #ddd; 
+  border: 1px solid rgba(29, 49, 233, 0.6); 
   color: #9c9b9b;
   border-radius: 8px;
   overflow: hidden;
@@ -53,9 +53,11 @@
   background-color: rgba(29, 49, 233, 0.6);
 }
 
-
-/* Today button styling */
 .rbc-toolbar .rbc-btn-group button {
   background-color: rgba(29, 49, 233, 0.6);
   color: white;
+}
+
+.rbc-today {
+  background-color:  rgba(29, 49, 233, 0.1);
 }
