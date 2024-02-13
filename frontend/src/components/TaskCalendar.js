@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
@@ -8,16 +8,31 @@ import "./TaskCalendar.css";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
+const token = localStorage.getItem("token");
 
 function TaskCalendar() {
-	const [events, setEvents] = useState([
-		{
-			start: moment().startOf('day').toDate(),
-			end: moment().endOf('day').toDate(),
-			title: "Some title",
-      allDay: true,
-		},
-	]);
+	const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:9999/tasks/open", {
+			headers: {
+				"Content-Type": "application/json",
+				authorization: `Bearer ${token}`,
+			},
+		})
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      const formatted = data.map((task) => ({
+				title: task.description,
+				start: moment(task.dueDate).startOf("day").toDate(),
+				end: moment(task.dueDate).endOf("day").toDate(),
+				allDay: true,
+			}));
+      console.log(formatted);
+      setEvents(formatted);
+    });
+  }, [events, token]);
 
 	 const moveEvent = ({ event, start, end }) => {
 			const idx = events.indexOf(event);
