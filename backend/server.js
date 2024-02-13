@@ -121,7 +121,6 @@ async function run() {
 				}
 
 				const newDueDate = req.body.newDueDate;
-				console.log(newDueDate);
 
 				const result = await db
 					.collection("tasks")
