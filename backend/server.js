@@ -107,6 +107,43 @@ async function run() {
 			}
 		});
 
+		// change date of task
+		app.put("/tasks/:taskId/date", authenticateToken, async (req, res) => {
+			try {
+				const taskId = req.params.taskId;
+				const task = await db
+					.collection("tasks")
+					.findOne({ _id: new ObjectId(taskId) });
+
+				if (!task) {
+					res.status(404).json({ message: "Task not found" });
+					return;
+				}
+
+				const newDueDate = req.body.newDueDate;
+				console.log(newDueDate);
+
+				const result = await db
+					.collection("tasks")
+					.updateOne(
+						{ _id: new ObjectId(taskId) },
+						{ $set: { dueDate: newDueDate } }
+					);
+
+				if (result.modifiedCount === 0) {
+					res.status(404).json({ message: "Task not found" });
+				} else {
+					res.status(200).json({
+						message: "Task updated successfully",
+						completed: newDueDate,
+					});
+				}
+			} catch (error) {
+				console.log(error);
+				res.status(500).json({ message: "Error updating task", error });
+			}
+		});
+
 		app.post("/tasks", authenticateToken, async (req, res) => {
 			try {
 				const { description, dueDate } = req.body;

@@ -22,14 +22,13 @@ function TaskCalendar() {
 		})
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       const formatted = data.map((task) => ({
 				title: task.description,
 				start: moment(task.dueDate).startOf("day").toDate(),
 				end: moment(task.dueDate).endOf("day").toDate(),
 				allDay: true,
+        id: task._id,
 			}));
-      console.log(formatted);
       setEvents(formatted);
     });
   }, [events, token]);
@@ -43,6 +42,25 @@ function TaskCalendar() {
 
 			setEvents(nextEvents);
 			console.log(updatedEvent);
+
+       fetch(`http://localhost:9999/tasks/${event.id}/date`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						authorization: `Bearer ${token}`, 
+					},
+					body: JSON.stringify({
+						newDueDate: moment(start).format("YYYY-MM-DD"),
+					}),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log("Success:", data);
+						setEvents(nextEvents);
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
 		};
 
   const CustomToolbar = (props) => {
