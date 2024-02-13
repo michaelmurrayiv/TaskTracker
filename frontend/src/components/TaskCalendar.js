@@ -31,7 +31,7 @@ function TaskCalendar() {
 			}));
       setEvents(formatted);
     });
-  }, [events, token]);
+  }, [events]);
 
 	 const moveEvent = ({ event, start, end }) => {
 			const idx = events.indexOf(event);

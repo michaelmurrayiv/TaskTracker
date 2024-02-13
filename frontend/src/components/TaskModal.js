@@ -75,6 +75,7 @@ function TaskModal({ open, handleClose }) {
 				<TextField
 					margin="normal"
 					fullWidth
+					required
 					id="dueDate"
 					label="Due Date"
 					name="dueDate"
