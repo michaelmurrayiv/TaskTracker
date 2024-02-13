@@ -46,8 +46,8 @@ function TaskCalendar() {
 
 		return (
 			<div className="rbc-toolbar">
-				<span className="rbc-toolbar-label">{monthName}</span>
-				<span className="rbc-btn-group">
+				<div className="toolbar-label">{monthName}</div>
+				<div className="rbc-btn-group">
 					<button type="button" onClick={goToToday}>
 						Today
 					</button>
@@ -57,7 +57,7 @@ function TaskCalendar() {
 					<button type="button" onClick={() => navigate("NEXT")}>
 						Next
 					</button>
-				</span>
+				</div>
 			</div>
 		);
 	};

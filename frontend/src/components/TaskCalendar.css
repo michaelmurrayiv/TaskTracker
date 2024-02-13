@@ -1,7 +1,9 @@
 .rbc-calendar {
   background: white; 
   border: 1px solid #ddd; 
-  color: #333;
+  color: #9c9b9b;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .rbc-toolbar {
@@ -9,10 +11,13 @@
   padding: 10px; 
   border-bottom: 2px solid #e7e7e7; 
   color: #333;
+  justify-content: space-between;
 }
 
-.rbc-toolbar-label {
-  
+.toolbar-label {
+  font-weight: bolder;
+  font-size: larger;
+  color: #646464;
 }
 
 .rbc-toolbar button {
